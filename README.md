@@ -42,6 +42,8 @@ python -m streamlit run demo/app.py
 python train_federated.py --use-pcam --rounds 10 --samples-per-hospital 5000
 ```
 
+
+
 ## 核心函数
 
 ```python
@@ -56,20 +58,26 @@ def sign_quantize(vector):
     return torch.sign(vector)
 ```
 
+
+
 ## 实验模式
 
-| 模式 | 含义 | CPU 友好 |
-|---|---|---|
-| `fedavg` | 完整梯度通信基线 | 是 |
-| `topk` | 只上传幅值最大的 10% 更新 | 是 |
-| `topk_ef` | Top-K + error feedback 残差补偿 | 是 |
-| `topk_sign` | Top-K + 1-bit 符号量化 | 是 |
-| `topk_sign_ef` | Top-K + SignSGD + error feedback | 是 |
+
+| 模式             | 含义                               | CPU 友好 |
+| -------------- | -------------------------------- | ------ |
+| `fedavg`       | 完整梯度通信基线                         | 是      |
+| `topk`         | 只上传幅值最大的 10% 更新                  | 是      |
+| `topk_ef`      | Top-K + error feedback 残差补偿      | 是      |
+| `topk_sign`    | Top-K + 1-bit 符号量化               | 是      |
+| `topk_sign_ef` | Top-K + SignSGD + error feedback | 是      |
+
 
 运行后会生成：
 
 - `results.csv`：每轮 AUC 与通信量
 - `summary.csv`：每种方法最后一轮结果，适合放进汇报
+
+
 
 ## 没有 GPU 怎么办
 
@@ -79,7 +87,7 @@ def sign_quantize(vector):
 
 建议按下面顺序展示，而不是只打开网页：
 
-1. 先给老师看 `PROJECT_REPORT.md`：说明临床问题、方法、实验结果和局限。
+1. 先看 `PROJECT_REPORT.md`：说明临床问题、方法、实验结果和局限。
 2. 再运行 `train_federated.py`：证明结果是可复现的，不只是静态页面。
 3. 打开 `summary.csv`：展示每种方法最终 AUC 和通信量。
 4. 最后打开 Streamlit 页面：作为可视化入口，而不是项目本体。
@@ -87,10 +95,12 @@ def sign_quantize(vector):
 项目的核心贡献可以表述为：
 
 ```text
-我不是只做了一个网页，而是搭了一个 CPU 可复现的联邦学习通信压缩实验闭环：
+不是只做了一个网页，而是搭了一个 CPU 可复现的联邦学习通信压缩实验闭环：
 FedAvg 基线 -> Top-K 稀疏 -> SignSGD 量化 -> Error Feedback 残差补偿 -> AUC/通信量对比。
 ```
 
+
+
 ## 展示话术
 
-冯老师，我基于病理 patch 数据搭建了一个模拟多医院联邦学习系统，比较了 FedAvg、Top-K 稀疏、SignSGD 量化和 error feedback 残差补偿。结果显示，在数据不出院的设定下，Top-K + SignSGD 能把梯度值载荷压缩到约 0.3%，error feedback 可用于缓解压缩带来的精度损失，这个方向可以服务 OmniPT 多中心协作里的通信优化问题。
+基于病理 patch 数据搭建了一个模拟多医院联邦学习系统，比较了 FedAvg、Top-K 稀疏、SignSGD 量化和 error feedback 残差补偿。结果显示，在数据不出院的设定下，Top-K + SignSGD 能把梯度值载荷压缩到约 0.3%，error feedback 可用于缓解压缩带来的精度损失，这个方向可以服务 OmniPT 多中心协作里的通信优化问题。
